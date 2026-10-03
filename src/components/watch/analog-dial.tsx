@@ -127,10 +127,10 @@ export function AnalogDial({ config, className }: Props) {
                 dominantBaseline="middle"
                 fill="var(--color-fg)"
                 fontFamily="var(--font-display)"
-                fontSize={i === 24 ? 13 : 18}
+                fontSize={16}
                 fontWeight={500}
               >
-                {String(i).padStart(2, "0")}
+                {String(i === 0 ? 25 : i).padStart(2, "0")}
               </text>
             )}
           </g>
