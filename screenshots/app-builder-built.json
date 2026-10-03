@@ -1,0 +1,40 @@
+{
+  "url": "http://127.0.0.1:8081/",
+  "viewports": {
+    "desktop": {
+      "width": 1280,
+      "height": 800,
+      "status": 200,
+      "title": "Hepta",
+      "hasCanvas": false,
+      "bodyTextLen": 243,
+      "bodyTextHash": "f7832842d5d1e03a7161b2da47b3687eb195dc09a3fe3218713facda53f3fa22",
+      "bodyTextPrefix": "HEPTA Montre Calendrier Convertir Codex Origine 00 05 10 15 20 2",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-built.png"
+    },
+    "mobile": {
+      "width": 390,
+      "height": 844,
+      "status": 200,
+      "title": "Hepta",
+      "hasCanvas": false,
+      "bodyTextLen": 243,
+      "bodyTextHash": "d994e3222c2be4b6b8e972e5d44262c2efbe78eb2b754d3176e41f1dd40e2fff",
+      "bodyTextPrefix": "HEPTA 00 05 10 15 20 24 HEPTA 25 H HEURES VRAIES 14:38:56 ÉLYRA ",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-built-mobile.png"
+    }
+  },
+  "brandWarnings": [],
+  "authWarnings": [],
+  "verdictFile": "/workspace/screenshots/app-builder-built.json",
+  "divergesFromBaseline": true,
+  "baselineReasons": [
+    "mobile: body text replaced (similar length, page start changed)"
+  ]
+}
