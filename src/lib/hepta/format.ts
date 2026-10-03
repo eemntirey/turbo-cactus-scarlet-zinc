@@ -7,11 +7,13 @@ function pad(n: number, w = 2): string {
 }
 
 export function formatTime(h: Pick<HeptaInstant, "hour" | "minute" | "second">): string {
-  return `${pad(h.hour)}:${pad(h.minute)}:${pad(h.second)}`;
+  const displayHour = h.hour === 0 ? 25 : h.hour;
+  return `${pad(displayHour)}:${pad(h.minute)}:${pad(h.second)}`;
 }
 
 export function formatTimeShort(h: Pick<HeptaInstant, "hour" | "minute">): string {
-  return `${pad(h.hour)}:${pad(h.minute)}`;
+  const displayHour = h.hour === 0 ? 25 : h.hour;
+  return `${pad(displayHour)}:${pad(h.minute)}`;
 }
 
 /** Aro 01 Avara, An 01 */

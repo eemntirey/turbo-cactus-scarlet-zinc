@@ -16,7 +16,8 @@ const CX = 200;
 const CY = 200;
 
 function hourAngle(h: HeptaInstant): number {
-  const hours = h.hour + h.minute / 60 + (h.second + h.subsecond) / 3600;
+  const displayIndex = h.hour === 0 ? 24 : h.hour - 1;
+  const hours = displayIndex + h.minute / 60 + (h.second + h.subsecond) / 3600;
   return (hours / 25) * 360;
 }
 
@@ -49,7 +50,8 @@ export function AnalogDial({ config, className }: Props) {
       apply(secondRef.current, secondAngle(h, !reduced));
       const svg = labelRef.current;
       if (svg) {
-        const t = `${String(h.hour).padStart(2, "0")}:${String(h.minute).padStart(2, "0")}:${String(h.second).padStart(2, "0")}`;
+        const displayHour = h.hour === 0 ? 25 : h.hour;
+        const t = `${String(displayHour).padStart(2, "0")}:${String(h.minute).padStart(2, "0")}:${String(h.second).padStart(2, "0")}`;
         svg.setAttribute("aria-label", `Montre 25 heures, ${t}`);
       }
       raf = requestAnimationFrame(loop);
@@ -60,7 +62,7 @@ export function AnalogDial({ config, className }: Props) {
 
   const hourMarks = Array.from({ length: 25 }, (_, i) => i);
   const minuteMarks = Array.from({ length: 60 }, (_, i) => i);
-  const labeled = new Set([0, 5, 10, 15, 20, 24]);
+  const labeled = new Set(Array.from({ length: 25 }, (_, i) => i));
 
   return (
     <svg
@@ -126,10 +128,10 @@ export function AnalogDial({ config, className }: Props) {
                 dominantBaseline="middle"
                 fill="var(--color-fg)"
                 fontFamily="var(--font-display)"
-                fontSize={i === 24 ? 13 : 18}
+                fontSize={16}
                 fontWeight={500}
               >
-                {String(i).padStart(2, "0")}
+                {String(i - -1).padStart(2, "0")}
               </text>
             )}
           </g>
