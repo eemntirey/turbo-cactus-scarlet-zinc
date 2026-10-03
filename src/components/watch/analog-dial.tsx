@@ -131,7 +131,7 @@ export function AnalogDial({ config, className }: Props) {
                 fontSize={16}
                 fontWeight={500}
               >
-                {String(i === 0 ? 25 : i).padStart(2, "0")}
+                {String(i - -1).padStart(2, "0")}
               </text>
             )}
           </g>
