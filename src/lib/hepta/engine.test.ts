@@ -13,6 +13,8 @@ import {
   earthToHepta,
   heptaToCalendarSeconds,
   heptaToEarth,
+  clampHeptaParts,
+  isValidHeptaParts,
   parseClockSeconds,
   parseLocalDateTime,
 } from "./engine.ts";
@@ -208,5 +210,66 @@ describe("local epoch helper", () => {
   it("parses the default origin", () => {
     assert.equal(parseLocalDateTime("2005-10-03", "12:10:00"), epochMs);
     assert.equal(parseClockSeconds("12:10:00"), 12 * 3600 + 10 * 60);
+  });
+});
+
+
+describe("input validation", () => {
+  it("accepts every valid clock boundary, including 24:59:59", () => {
+    assert.equal(
+      isValidHeptaParts({
+        year: 1,
+        month: 1,
+        dayOfMonth: 1,
+        hour: 24,
+        minute: 59,
+        second: 59,
+      }),
+      true,
+    );
+  });
+
+  it("rejects invalid calendar fields", () => {
+    assert.equal(
+      isValidHeptaParts({
+        year: 1,
+        month: 8,
+        dayOfMonth: 1,
+        hour: 0,
+        minute: 0,
+        second: 0,
+      }),
+      false,
+    );
+    assert.equal(
+      isValidHeptaParts({
+        year: 1,
+        month: 1,
+        dayOfMonth: 50,
+        hour: 0,
+        minute: 0,
+        second: 0,
+      }),
+      false,
+    );
+  });
+
+  it("normalizes empty/NaN numeric inputs instead of producing NaN dates", () => {
+    const parts = clampHeptaParts({
+      year: 1,
+      month: Number.NaN,
+      dayOfMonth: Number.NaN,
+      hour: Number.NaN,
+      minute: Number.NaN,
+      second: Number.NaN,
+    });
+    assert.deepEqual(parts, {
+      year: 1,
+      month: 1,
+      dayOfMonth: 1,
+      hour: 0,
+      minute: 0,
+      second: 0,
+    });
   });
 });
