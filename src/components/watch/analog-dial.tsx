@@ -16,7 +16,8 @@ const CX = 200;
 const CY = 200;
 
 function hourAngle(h: HeptaInstant): number {
-  const hours = h.hour + h.minute / 60 + (h.second + h.subsecond) / 3600;
+  const displayIndex = h.hour === 0 ? 24 : h.hour - 1;
+  const hours = displayIndex + h.minute / 60 + (h.second + h.subsecond) / 3600;
   return (hours / 25) * 360;
 }
 
