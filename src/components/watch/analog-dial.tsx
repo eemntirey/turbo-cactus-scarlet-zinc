@@ -49,7 +49,8 @@ export function AnalogDial({ config, className }: Props) {
       apply(secondRef.current, secondAngle(h, !reduced));
       const svg = labelRef.current;
       if (svg) {
-        const t = `${String(h.hour).padStart(2, "0")}:${String(h.minute).padStart(2, "0")}:${String(h.second).padStart(2, "0")}`;
+        const displayHour = h.hour === 0 ? 25 : h.hour;
+        const t = `${String(displayHour).padStart(2, "0")}:${String(h.minute).padStart(2, "0")}:${String(h.second).padStart(2, "0")}`;
         svg.setAttribute("aria-label", `Montre 25 heures, ${t}`);
       }
       raf = requestAnimationFrame(loop);
