@@ -61,7 +61,7 @@ export function AnalogDial({ config, className }: Props) {
 
   const hourMarks = Array.from({ length: 25 }, (_, i) => i);
   const minuteMarks = Array.from({ length: 60 }, (_, i) => i);
-  const labeled = new Set([0, 5, 10, 15, 20, 24]);
+  const labeled = new Set(Array.from({ length: 25 }, (_, i) => i));
 
   return (
     <svg
