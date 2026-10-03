@@ -28,7 +28,7 @@
   },
   "bundle": {
     "active": true,
-    "targets": ["nsis", "msi"],
+    "targets": ["nsis"],
     "category": "Utility",
     "shortDescription": "Calendrier de 25 heures",
     "longDescription": "Hepta — calendrier de 25 heures, sept jours, sept semaines et sept mois.",
