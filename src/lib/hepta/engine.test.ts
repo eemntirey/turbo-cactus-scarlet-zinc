@@ -10,6 +10,7 @@ import {
 import {
   calendarSecondsToHepta,
   type HeptaConfig,
+  type HeptaInstant,
   earthToHepta,
   heptaToCalendarSeconds,
   heptaToEarth,
@@ -19,10 +20,27 @@ import {
   parseLocalDateTime,
 } from "./engine.ts";
 import { dayById, monthById } from "./names.ts";
-import { formatHuman, formatTechnical, formatTime } from "./format.ts";
+import { formatHuman, formatTechnical, formatTime, formatTimeShort } from "./format.ts";
+import { dialLabel, hourAngle } from "./dial.ts";
 
 const epochMs = new Date(2005, 9, 3, 12, 10, 0).getTime();
 const epochClock = parseClockSeconds("12:10:00");
+
+function inst(hour: number, minute = 0, second = 0, subsecond = 0): HeptaInstant {
+  return {
+    year: 1,
+    month: 1,
+    week: 1,
+    dayOfMonth: 1,
+    dayOfWeek: 1,
+    dayOfYear: 1,
+    dayIndex: 0,
+    hour,
+    minute,
+    second,
+    subsecond,
+  };
+}
 
 const real: HeptaConfig = { epochMs, mode: "real", epochClockSeconds: epochClock };
 const sync: HeptaConfig = { epochMs, mode: "sync", epochClockSeconds: epochClock };
@@ -79,6 +97,44 @@ describe("hour rollover", () => {
     assert.equal(h.minute, 59);
     assert.equal(h.second, 59);
     assert.equal(h.dayOfMonth, 1);
+  });
+});
+
+describe("display convention: 25 is the visual zero", () => {
+  it("internal hour 0 displays as 25, never 00", () => {
+    assert.equal(formatTime(inst(0, 0, 0)), "25:00:00");
+    assert.equal(formatTime(inst(0, 30, 0)), "25:30:00");
+    assert.equal(formatTime(inst(0, 59, 59)), "25:59:59");
+    assert.equal(formatTimeShort(inst(0, 0)), "25:00");
+  });
+
+  it("internal hours 1–24 display as 01–24", () => {
+    assert.equal(formatTime(inst(1, 0, 0)), "01:00:00");
+    assert.equal(formatTime(inst(12, 10, 0)), "12:10:00");
+    assert.equal(formatTime(inst(24, 59, 59)), "24:59:59");
+  });
+
+  it("end of day 24:59:59 rolls to 25:00:00 displayed on the next day", () => {
+    const last = calendarSecondsToHepta(SECONDS_PER_CALENDAR_DAY - 1);
+    const next = calendarSecondsToHepta(SECONDS_PER_CALENDAR_DAY);
+    assert.equal(formatTime(last), "24:59:59");
+    assert.equal(next.hour, 0);
+    assert.equal(next.dayOfMonth, 2);
+    assert.equal(formatTime(next), "25:00:00");
+  });
+
+  it("dial: internal 0 points at 25 (top), 1 at 01, 12 halfway, 24:59:59 back at 25", () => {
+    assert.ok(Math.abs(hourAngle(inst(0, 0, 0)) - 0) < 1e-9);
+    assert.ok(Math.abs(hourAngle(inst(1, 0, 0)) - 360 / 25) < 1e-9);
+    assert.ok(Math.abs(hourAngle(inst(12, 30, 0)) - 180) < 1e-9);
+    assert.ok(Math.abs(hourAngle(inst(24, 59, 59)) - 360) < 0.01);
+  });
+
+  it("dial labels run 01…25 with 25 at the zero position", () => {
+    assert.equal(dialLabel(0), "25");
+    assert.equal(dialLabel(1), "01");
+    assert.equal(dialLabel(12), "12");
+    assert.equal(dialLabel(24), "24");
   });
 });
 

@@ -6,14 +6,21 @@ function pad(n: number, w = 2): string {
   return sign + String(Math.abs(n)).padStart(w, "0");
 }
 
+/**
+ * Convention visuelle du projet : 25 = zéro du cycle.
+ * L'heure interne 0 ne s'affiche jamais « 00 » mais « 25 » ;
+ * les heures internes 1–24 s'affichent 01–24.
+ */
+export function displayHour(hour: number): number {
+  return ((hour % 25) + 25) % 25 === 0 ? 25 : hour;
+}
+
 export function formatTime(h: Pick<HeptaInstant, "hour" | "minute" | "second">): string {
-  const displayHour = h.hour === 0 ? 25 : h.hour;
-  return `${pad(displayHour)}:${pad(h.minute)}:${pad(h.second)}`;
+  return `${pad(displayHour(h.hour))}:${pad(h.minute)}:${pad(h.second)}`;
 }
 
 export function formatTimeShort(h: Pick<HeptaInstant, "hour" | "minute">): string {
-  const displayHour = h.hour === 0 ? 25 : h.hour;
-  return `${pad(displayHour)}:${pad(h.minute)}`;
+  return `${pad(displayHour(h.hour))}:${pad(h.minute)}`;
 }
 
 /** Aro 01 Avara, An 01 */

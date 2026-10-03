@@ -1,5 +1,7 @@
 import { useEffect, useRef } from "react";
 import { earthToHepta, type HeptaConfig, type HeptaInstant } from "@/lib/hepta/engine";
+import { CX, CY, dialLabel, hourAngle, minuteAngle, secondAngle } from "@/lib/hepta/dial";
+import { formatTime } from "@/lib/hepta/format";
 import { usePrefersReducedMotion } from "@/lib/hepta/use-now";
 import { cn } from "@/lib/utils";
 
@@ -10,24 +12,6 @@ type Props = {
 
 function r(n: number): number {
   return Math.round(n * 100) / 100;
-}
-
-const CX = 200;
-const CY = 200;
-
-function hourAngle(h: HeptaInstant): number {
-  const displayIndex = h.hour === 0 ? 24 : h.hour - 1;
-  const hours = displayIndex + h.minute / 60 + (h.second + h.subsecond) / 3600;
-  return (hours / 25) * 360;
-}
-
-function minuteAngle(h: HeptaInstant): number {
-  return ((h.minute + (h.second + h.subsecond) / 60) / 60) * 360;
-}
-
-function secondAngle(h: HeptaInstant, sweep: boolean): number {
-  const s = sweep ? h.second + h.subsecond : h.second;
-  return (s / 60) * 360;
 }
 
 export function AnalogDial({ config, className }: Props) {
@@ -50,9 +34,7 @@ export function AnalogDial({ config, className }: Props) {
       apply(secondRef.current, secondAngle(h, !reduced));
       const svg = labelRef.current;
       if (svg) {
-        const displayHour = h.hour === 0 ? 25 : h.hour;
-        const t = `${String(displayHour).padStart(2, "0")}:${String(h.minute).padStart(2, "0")}:${String(h.second).padStart(2, "0")}`;
-        svg.setAttribute("aria-label", `Montre 25 heures, ${t}`);
+        svg.setAttribute("aria-label", `Montre 25 heures, ${formatTime(h)}`);
       }
       raf = requestAnimationFrame(loop);
     };
@@ -62,7 +44,7 @@ export function AnalogDial({ config, className }: Props) {
 
   const hourMarks = Array.from({ length: 25 }, (_, i) => i);
   const minuteMarks = Array.from({ length: 60 }, (_, i) => i);
-  const labeled = new Set(Array.from({ length: 25 }, (_, i) => i));
+  const majorHours = new Set([0, 5, 10, 15, 20]);
 
   return (
     <svg
@@ -103,11 +85,13 @@ export function AnalogDial({ config, className }: Props) {
       {hourMarks.map((i) => {
         const a = (i / 25) * 360;
         const rad = ((a - 90) * Math.PI) / 180;
-        const isMajor = labeled.has(i);
+        const isMajor = majorHours.has(i);
+        const isZero = i === 0;
         const inner = isMajor ? 128 : 138;
         const outer = 152;
-        const lx = r(CX + Math.cos(rad) * 114);
-        const ly = r(CY + Math.sin(rad) * 114);
+        const lx = r(CX + Math.cos(rad) * 112);
+        const ly = r(CY + Math.sin(rad) * 112);
+        const nearZero = i === 24 || i === 1;
         return (
           <g key={`h-${i}`}>
             <line
@@ -115,25 +99,25 @@ export function AnalogDial({ config, className }: Props) {
               y1={r(CY + Math.sin(rad) * inner)}
               x2={r(CX + Math.cos(rad) * outer)}
               y2={r(CY + Math.sin(rad) * outer)}
-              stroke="var(--color-fg)"
+              stroke={isZero ? "var(--color-accent)" : "var(--color-fg)"}
               strokeWidth={isMajor ? 2 : 1}
               strokeLinecap="round"
               opacity={isMajor ? 1 : 0.45}
             />
-            {isMajor && (
-              <text
-                x={lx}
-                y={ly}
-                textAnchor="middle"
-                dominantBaseline="middle"
-                fill="var(--color-fg)"
-                fontFamily="var(--font-display)"
-                fontSize={16}
-                fontWeight={500}
-              >
-                {String(i - -1).padStart(2, "0")}
-              </text>
-            )}
+            <text
+              x={lx}
+              y={ly}
+              textAnchor="middle"
+              dominantBaseline="middle"
+              fill={
+                isZero ? "var(--color-accent)" : isMajor ? "var(--color-fg)" : "var(--color-muted)"
+              }
+              fontFamily="var(--font-display)"
+              fontSize={isZero ? 18 : nearZero ? 11.5 : 12.5}
+              fontWeight={isMajor ? 600 : 400}
+            >
+              {dialLabel(i)}
+            </text>
           </g>
         );
       })}

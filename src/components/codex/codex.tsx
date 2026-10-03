@@ -84,6 +84,12 @@ export function Codex() {
           <p className="mt-3 text-sm text-muted">
             Première lettre du mois, numéro du mois, jour du mois, année depuis l'origine.
           </p>
+          <p className="mt-6 text-sm text-muted">Écriture de l'heure</p>
+          <p className="font-display text-xl tabular">25:37:42</p>
+          <p className="mt-3 text-sm text-muted">
+            Vingt-cinq positions, de 01 à 25. Le 25 est le zéro du cycle : on n'écrit jamais « 00 ».
+            À 25:00:00, le jour se clôt et l'heure suivante est 01:00:00 du jour d'après.
+          </p>
         </article>
         <article className="rounded-[var(--radius-xl)] border border-border bg-surface p-5 sm:p-6">
           <h2 className="font-display text-2xl">Ce qui n'existe pas</h2>

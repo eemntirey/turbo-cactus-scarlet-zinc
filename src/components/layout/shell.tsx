@@ -4,11 +4,11 @@ import { HeptaMark } from "@/components/glyphs/month-glyph";
 import { cn } from "@/lib/utils";
 
 const NAV = [
-  { to: "/", label: "Montre" },
-  { to: "/calendrier", label: "Calendrier" },
-  { to: "/convertir", label: "Convertir" },
-  { to: "/codex", label: "Codex" },
-  { to: "/origine", label: "Origine" },
+  { to: "/", label: "Montre", short: "Montre" },
+  { to: "/calendrier", label: "Calendrier", short: "Cal." },
+  { to: "/convertir", label: "Convertir", short: "Conv." },
+  { to: "/codex", label: "Codex", short: "Codex" },
+  { to: "/origine", label: "Origine", short: "Origine" },
 ] as const;
 
 export function Shell({ children }: { children: ReactNode }) {
@@ -50,12 +50,15 @@ export function Shell({ children }: { children: ReactNode }) {
               <Link
                 to={item.to}
                 className={cn(
-                  "flex h-14 items-center justify-center text-xs uppercase tracking-widest text-muted no-underline",
+                  "flex h-14 items-center justify-center px-0.5 text-[11px] uppercase tracking-[0.06em] text-muted no-underline",
                 )}
                 activeProps={{ className: "text-fg" }}
                 activeOptions={{ exact: item.to === "/" }}
               >
-                {item.label}
+                {/* Libellé complet dès sm (cellules ≥ 128px) ; forme courte en dessous,
+                    sinon « Calendrier » (~95px) déborde de sa cellule (78px à 390px). */}
+                <span className="hidden sm:inline">{item.label}</span>
+                <span className="sm:hidden">{item.short}</span>
               </Link>
             </li>
           ))}

@@ -23,6 +23,15 @@ function fromDate(d: Date): { date: string; time: string } {
   return { date: isoDate(d), time: isoTime(d) };
 }
 
+/** Convention visuelle : l'utilisateur saisit 1–25, où 25 est le zéro du cycle. */
+function internalToDisplay(hour: number): number {
+  return hour === 0 ? 25 : hour;
+}
+
+function displayToInternal(hour: number): number {
+  return !Number.isFinite(hour) || hour <= 0 || hour >= 25 ? 0 : Math.round(hour);
+}
+
 function parseDateTime(date: string, time: string): Date | null {
   if (!date) return null;
   const t = time.length === 5 ? `${time}:00` : time;
@@ -55,7 +64,7 @@ export function Converter() {
     setHYear(h.year);
     setHMonth(h.month);
     setHDay(h.dayOfMonth);
-    setHHour(h.hour);
+    setHHour(internalToDisplay(h.hour));
     setHMinute(h.minute);
     setHSecond(h.second);
     setSeeded(true);
@@ -68,7 +77,7 @@ export function Converter() {
     setHYear(h.year);
     setHMonth(h.month);
     setHDay(h.dayOfMonth);
-    setHHour(h.hour);
+    setHHour(internalToDisplay(h.hour));
     setHMinute(h.minute);
     setHSecond(h.second);
   };
@@ -85,7 +94,7 @@ export function Converter() {
     year: hYear,
     month: hMonth,
     dayOfMonth: hDay,
-    hour: hHour,
+    hour: displayToInternal(hHour),
     minute: hMinute,
     second: hSecond,
   };
@@ -217,17 +226,17 @@ export function Converter() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="h-hour">Heure (0–24)</Label>
+              <Label htmlFor="h-hour">Heure (1–25)</Label>
               <Input
                 id="h-hour"
                 type="number"
-                min={0}
-                max={24}
+                min={1}
+                max={25}
                 value={hHour}
                 onChange={(e) => {
                   const hour = Number(e.target.value);
                   setHHour(hour);
-                  applyHepta({ ...heptaParts, hour });
+                  applyHepta({ ...heptaParts, hour: displayToInternal(hour) });
                 }}
               />
             </div>
