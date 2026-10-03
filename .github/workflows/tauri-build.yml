@@ -107,7 +107,7 @@ jobs:
           test -f "$APK"
 
           KS="$RUNNER_TEMP/hepta-debug.keystore"
-          keytool -genkeypair -v             -keystore "$KS"             -storetype JKS             -storepass android             -keypass android             -alias androiddebugkey             -keyalg RSA             -keysize 2048             -validity 10000             -dname "CN=Android Debug,O=Android,C=US" >/dev/null 2>&1 || true
+          keytool -genkeypair -v             -keystore "$KS"             -storetype JKS             -storepass android             -keypass android             -alias androiddebugkey             -keyalg RSA             -keysize 2048             -validity 10000             -dname "CN=Android Debug,O=Android,C=US" >/dev/null 2>&1
 
           BUILD_TOOLS="$ANDROID_HOME/build-tools/35.0.0"
           ALIGNED="$RUNNER_TEMP/hepta-aligned.apk"
