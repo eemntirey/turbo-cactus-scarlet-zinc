@@ -1,6 +1,9 @@
 name: Tauri — Windows + Android
 
 on:
+  push:
+    branches:
+      - tauri-packaging
   workflow_dispatch:
 
 permissions:
