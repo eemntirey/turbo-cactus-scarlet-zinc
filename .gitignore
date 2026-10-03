@@ -1,7 +1,12 @@
 node_modules/
+.project_id
 .github_repo
 .env
 .env.*
 
-# Tauri / local distribution build outputs
+# Build output & local QA artifacts
+.vercel/
+screenshots/
+
+# Tauri local distribution build output
 dist-tauri/
