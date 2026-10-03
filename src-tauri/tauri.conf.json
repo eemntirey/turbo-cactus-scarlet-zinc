@@ -4,9 +4,10 @@
   "version": "0.1.0",
   "identifier": "com.hepta.calendar",
   "build": {
-    "beforeDevCommand": "npm run dev",
+    "beforeDevCommand": "npm run dev:tauri",
     "devUrl": "http://localhost:8080",
-    "frontendDist": "./boot"
+    "frontendDist": "../dist-tauri",
+    "beforeBuildCommand": "npm run build:tauri"
   },
   "app": {
     "windows": [
@@ -28,7 +29,9 @@
   },
   "bundle": {
     "active": true,
-    "targets": ["nsis"],
+    "targets": [
+      "nsis"
+    ],
     "category": "Utility",
     "shortDescription": "Calendrier de 25 heures",
     "longDescription": "Hepta — calendrier de 25 heures, sept jours, sept semaines et sept mois.",
@@ -40,9 +43,7 @@
       "icons/icon.ico"
     ],
     "windows": {
-      "nsis": {
-        "installMode": "perMachine"
-      }
+      "nsis": {}
     },
     "android": {
       "minSdkVersion": 24,
