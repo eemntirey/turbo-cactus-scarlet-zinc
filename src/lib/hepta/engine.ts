@@ -155,11 +155,39 @@ export function withNames(h: HeptaInstant) {
   };
 }
 
+function safeInteger(value: number, fallback: number): number {
+  return Number.isFinite(value) ? Math.round(value) : fallback;
+}
+
+export function isValidHeptaParts(parts: HeptaParts): boolean {
+  return (
+    Number.isFinite(parts.year) &&
+    Number.isInteger(parts.year) &&
+    parts.month >= 1 &&
+    parts.month <= 7 &&
+    Number.isInteger(parts.month) &&
+    parts.dayOfMonth >= 1 &&
+    parts.dayOfMonth <= 49 &&
+    Number.isInteger(parts.dayOfMonth) &&
+    parts.hour >= 0 &&
+    parts.hour <= 24 &&
+    Number.isInteger(parts.hour) &&
+    parts.minute >= 0 &&
+    parts.minute <= 59 &&
+    Number.isInteger(parts.minute) &&
+    parts.second !== undefined &&
+    parts.second >= 0 &&
+    parts.second <= 59 &&
+    Number.isInteger(parts.second) &&
+    (parts.subsecond === undefined || (parts.subsecond >= 0 && parts.subsecond < 1))
+  );
+}
+
 export function clampHeptaParts(parts: HeptaParts): HeptaParts {
-  const month = Math.min(7, Math.max(1, Math.round(parts.month)));
-  const dayOfMonth = Math.min(49, Math.max(1, Math.round(parts.dayOfMonth)));
-  const hour = Math.min(24, Math.max(0, Math.round(parts.hour)));
-  const minute = Math.min(59, Math.max(0, Math.round(parts.minute)));
-  const second = Math.min(59, Math.max(0, Math.round(parts.second ?? 0)));
+  const month = Math.min(7, Math.max(1, safeInteger(parts.month, 1)));
+  const dayOfMonth = Math.min(49, Math.max(1, safeInteger(parts.dayOfMonth, 1)));
+  const hour = Math.min(24, Math.max(0, safeInteger(parts.hour, 0)));
+  const minute = Math.min(59, Math.max(0, safeInteger(parts.minute, 0)));
+  const second = Math.min(59, Math.max(0, safeInteger(parts.second ?? 0, 0)));
   return { ...parts, month, dayOfMonth, hour, minute, second };
 }
